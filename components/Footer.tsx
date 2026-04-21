@@ -1,7 +1,7 @@
 import { IconBrandFacebook, IconBrandInstagram, IconBrandX, IconBrandYoutube } from '@tabler/icons-react';
 const Footer = () => {
     return (
-        <footer className='flex flex-row  h-80 items-center text-xl pt-12  bg-linear-to-b text-white from-black to-cyan-900'>
+        <footer className='flex flex-row  h-80 items-center text-xl pt-12 p-8 md:p-0  bg-linear-to-b text-white from-black to-cyan-900'>
             <div className='grid grid-cols-2 w-full  md:grid-cols-4 gap-10  md:gap-12 mx-auto  '>
                 <div className='select-none text-3xl md:text-4xl lg:text-5xl text-center '>
                     <h1 className=' font-semibold'>CineZest</h1>

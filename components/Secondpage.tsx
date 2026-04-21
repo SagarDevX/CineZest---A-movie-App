@@ -6,7 +6,7 @@ import AnimatedShow from './AnimatedShow'
 
 const Secondpage = () => {
   return (
-    <div className=' bg-black pt-8'>
+    <div className=' bg-black pt-28 lg:ot-20 '>
       <TrendingPage/>
       <PopulerMovie/>
       <KoreanShows/>
