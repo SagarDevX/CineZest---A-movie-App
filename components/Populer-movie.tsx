@@ -35,11 +35,11 @@ const PopulerMovie = () => {
   return (
     
       <div className='  lg:h-88 px-8 lg:px-16 mt-8 md:mt-16  '>
-        <h1 className='text-2xl md:text-4xl tracking-tight font-semibold '>Top Rated</h1>
+        <h1 className='text-2xl md:text-4xl tracking-tight font-semibold text-white '>Top Rated</h1>
         <div className=' flex overflow-y-hidden my-2 overflow-x-hidden relative'>
         
  
-          <div className=" flex flex-row gap-6 ">
+          <div className=" flex flex-row gap-1 md:gap-6 text-white">
             {allMovie.map((mov, idx) => (
             <motion.div
               whileHover={{
@@ -49,7 +49,7 @@ const PopulerMovie = () => {
                 duration: 0.3
               }}
               key={idx}
-              className='w-20 md:w-35 lg:w-50 flex flex-col items-center group relative cursor-pointer '>
+              className='w-28 md:w-35 lg:w-50 flex flex-col items-center group relative cursor-pointer '>
               <div
                 className="  ">
                 <Card src={`https://image.tmdb.org/t/p/w500${mov.poster_path}`} alt={"MovPoster"} width={300} height={1000} />
