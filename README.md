@@ -61,4 +61,4 @@ CineZest/
 Sagar — @SagarDevX
 
 📄 License
-This project is open source and available under the MIT License.<img width="905" height="681" alt="movie app" src="https://github.com/user-attachments/assets/6ef5e7e7-91c6-41f9-9916-3c6a26a1e4b0" />
+This project is open source and available under the MIT License
