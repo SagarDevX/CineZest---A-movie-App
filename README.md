@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+🎬 CineZest — A Movie Discovery App
+A modern movie discovery web app where users can explore trending films, top-rated content, Korean dramas, and animated shows — all in one cinematic experience.
+🔗 Live Demo: cine-zest-a-movie-app.vercel.app
 
-## Getting Started
+🖼️ Preview
 
-First, run the development server:
+<img width="905" height="681" alt="movie app" src="https://github.com/user-attachments/assets/451f441d-e8ec-4f75-b317-751b63c19406" />
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+✨ Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+🔥 Trending movies & shows this week
+⭐ Top-rated content across genres
+🇰🇷 Korean dramas section
+🎨 Animated shows category
+🌑 Cinematic dark theme UI
+🎭 Dynamic hero section with featured content
+📱 Fully responsive design
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+🛠️ Tech Stack
+TechnologyPurposeNext.js 14React framework with App RouterTypeScriptType-safe developmentTailwind CSSUtility-first stylingTMDB APIMovie & show dataVercelDeployment
 
-## Learn More
+🚀 Getting Started
+Prerequisites
 
-To learn more about Next.js, take a look at the following resources:
+Node.js 18+
+A free TMDB API key
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Installation
+bash# Clone the repo
+git clone https://github.com/SagarDevX/CineZest---A-movie-App.git
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Navigate to the project
+cd CineZest---A-movie-App
 
-## Deploy on Vercel
+# Install dependencies
+npm install
+Environment Variables
+Create a .env.local file in the root directory:
+envNEXT_PUBLIC_TMDB_API_KEY=your_api_key_here
+Run Locally
+bashnpm run dev
+Open http://localhost:3000 in your browser.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+📁 Project Structure
+CineZest/
+├── app/              # Next.js App Router pages
+├── components/       # Reusable UI components
+├── public/           # Static assets
+└── ...config files
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+🔮 Upcoming Features
+
+ Search functionality
+ Movie detail pages with cast & trailers
+ Watchlist with local storage
+ User authentication
+
+
+👨‍💻 Author
+Sagar — @SagarDevX
+
+📄 License
+This project is open source and available under the MIT License.<img width="905" height="681" alt="movie app" src="https://github.com/user-attachments/assets/6ef5e7e7-91c6-41f9-9916-3c6a26a1e4b0" />
