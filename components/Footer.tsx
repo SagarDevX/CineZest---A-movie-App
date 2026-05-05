@@ -1,7 +1,7 @@
 import { IconBrandFacebook, IconBrandInstagram, IconBrandX, IconBrandYoutube } from '@tabler/icons-react';
 const Footer = () => {
     return (
-        <footer className='flex flex-row  h-80 items-center text-xl pt-12 p-8 md:p-0  bg-linear-to-b text-white from-black to-cyan-900'>
+        <footer className='flex flex-row  h-80 items-center text-xl pt-16 p-10 md:p-0  bg-linear-to-b text-white from-black to-cyan-900'>
             <div className='grid grid-cols-2 w-full  md:grid-cols-4 gap-10  md:gap-12 mx-auto  '>
                 <div className='select-none text-3xl md:text-4xl lg:text-5xl text-center '>
                     <h1 className=' font-semibold'>CineZest</h1>
@@ -27,7 +27,7 @@ const Footer = () => {
                     <h1>Connect with Us</h1>
                     <div className='grid grid-cols-2 w-32  gap-0 md:grid-cols-4 md:gap-2 text-4xl'>
                         <IconBrandFacebook stroke={1} className='hover:bg-[#0866FF] size-8 rounded transition-all duration-200' />
-                        <IconBrandInstagram stroke={1} className='hover:bg-[#C13584] size-8 rounded transition-all duration-200' />
+                        <IconBrandInstagram stroke={1} className='hover:bg-[#ff0090] size-8 rounded transition-all duration-200' />
                         <IconBrandX stroke={1} className='hover:bg-[#4c484d] size-8 rounded transition-all duration-200' />
                         <IconBrandYoutube stroke={1} className='hover:bg-[#ff0814]  size-8 rounded transition-all duration-200' />
                     </div>

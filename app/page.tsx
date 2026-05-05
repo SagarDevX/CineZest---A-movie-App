@@ -1,5 +1,4 @@
 "use client"
-import Footer from '@/components/Footer'
 import Secondpage from '@/components/Secondpage'
 import React, { useEffect, useState } from 'react'
 
@@ -79,7 +78,7 @@ const Page = () => {
         </div>
       </div>
       <Secondpage />
-      <Footer />
+     
     </div>
 
   )

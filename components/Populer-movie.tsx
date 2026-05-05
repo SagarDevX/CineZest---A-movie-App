@@ -63,7 +63,7 @@ const PopulerMovie = () => {
               <div
                 className="absolute bottom-3 text-left px-2 w-full  opacity-0 group-hover:opacity-100  rounded-xl"> 
                 <h1 className="text-[12px] md:text-xl font-semibold line-clamp-2 text-white">{mov.title}</h1>
-                <span className=" font-medium text-[10px] md:text-base md:text-md">⭐ {mov.vote_average}</span>
+                <span className=" font-medium  text-[10px] md:text-base md:text-md">⭐ {mov.vote_average}</span>
               </div>
             </motion.div>
           ))} 
