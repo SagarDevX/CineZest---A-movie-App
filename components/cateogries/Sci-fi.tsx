@@ -1,7 +1,7 @@
 'use client'
 import { motion } from "motion/react"
 import React, { useEffect, useState } from 'react'
-import Card from "../card"
+import Card from "../Card"
 
 type Movie = {
   id: number;
