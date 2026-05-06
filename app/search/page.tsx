@@ -1,14 +1,17 @@
 'use client';
 import Card from "@/components/card";
 
+export const dynamic = "force-dynamic";
+
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 type Movie = {
   id: number;
-  name: string;
+  name?: string;
+  title?: string;
   poster_path: string | null;
-  vote_average: string;
+  vote_average: number;
 };
 
 export default function SearchPage() {
@@ -79,7 +82,7 @@ export default function SearchPage() {
             <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 bg-linear-to-b from-transparent to-black" />
 
             <div className="absolute bottom-3 text-left px-2 w-full opacity-0 group-hover:opacity-100 rounded-xl">
-              <h1 className="text-[12px] md:text-xl font-semibold line-clamp-2 text-white">{mov.name}</h1>
+              <h1 className="text-[12px] md:text-xl font-semibold line-clamp-2 text-white">{mov.name || mov.title}</h1>
               <span className="font-medium text-[10px] md:text-base">⭐ {mov.vote_average}</span>
             </div>
           </div>
