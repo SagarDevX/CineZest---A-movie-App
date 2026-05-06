@@ -2,7 +2,7 @@
 import { motion } from "motion/react"
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
-import Card from './Card';
+import Card from './card';
 
 type Movie = {
   id: number;
