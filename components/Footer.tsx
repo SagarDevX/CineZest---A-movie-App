@@ -24,7 +24,7 @@ const Footer = () => {
                     </div>
                 </div>
                 <div className='flex flex-col gap-2 opacity-80 items-center md:items-start '>
-                    <h1>Connect with Us</h1>
+                    <h1 className='text-center'>Connect with Us</h1>
                     <div className='grid grid-cols-2 w-32  gap-0 md:grid-cols-4 md:gap-2 text-4xl'>
                         <IconBrandFacebook stroke={1} className='hover:bg-[#0866FF] size-8 rounded transition-all duration-200' />
                         <IconBrandInstagram stroke={1} className='hover:bg-[#ff0090] size-8 rounded transition-all duration-200' />
