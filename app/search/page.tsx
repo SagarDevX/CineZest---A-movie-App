@@ -1,10 +1,8 @@
 'use client';
 import Card from "@/components/card";
 
-export const dynamic = "force-dynamic";
-
-import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 type Movie = {
   id: number;
@@ -14,10 +12,10 @@ type Movie = {
   vote_average: number;
 };
 
-export default function SearchPage() {
-  const searchParams = useSearchParams();
-  const query = searchParams.get("query") || "";
-
+export default function SearchPage(){
+  
+  const searchParams = useSearchParams() 
+  const query = searchParams.get("query") || ""
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(false);
 
