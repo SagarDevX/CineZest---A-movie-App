@@ -66,7 +66,7 @@ const Navbar = () => {
         transition={{ duration: 0.2 }}
         style={{ backdropFilter: useMotionTemplate`blur(${blur}px)` }}
         className="fixed top-0 left-0 w-full h-20 flex justify-between 
-        items-center px-4 md:px-16 text-2xl z-50 bg-transparent backdrop-blur-sm">
+        items-center px-4 md:px-16 text-2xl z-200 bg-transparent backdrop-blur-sm">
         <div>
           <Image
             src="/logo.png"
@@ -75,7 +75,7 @@ const Navbar = () => {
             height={1000} />
         </div>
 
-        <div className="">
+        <div >
           <form className='flex flex-row justify-center gap-2 ' onSubmit={(e) => {
             e.preventDefault();
             if (!query.trim()) return;
@@ -91,7 +91,7 @@ const Navbar = () => {
                 className='border border-white rounded-xl outline-none focus:ring-1 focus:ring-white focus:scale-102 p-1 
                transition-all duration-300 w-72 lg:w-120 text-base lg:text-2xl placeholder:text-neutral-400 active:text-white'
                 placeholder='Search' />
-              <button>search</button>
+              <button>Search</button>
 
               {showSuggestions && suggestions.length > 0 && (
                 <div className="absolute top-full -left-1 w-full bg-black/90 backdrop-blur-3xl border border-white/40 rounded-lg mt-2 z-50">

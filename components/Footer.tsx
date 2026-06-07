@@ -5,7 +5,7 @@ const Footer = () => {
             <div className='grid grid-cols-2 w-full  md:grid-cols-4 gap-10  md:gap-12 mx-auto  '>
                 <div className='select-none text-3xl md:text-4xl lg:text-5xl text-center '>
                     <h1 className=' font-semibold'>CineZest</h1>
-                    <h1 className='text-base md:text-2xl'>© All Right Reserves</h1>
+                    <h1 className='text-base md:text-2xl'>© All Rights Reserved.</h1>
                 </div>
                 <div className='flex flex-col gap-2 opacity-80 text-center md:text-left'>
                     <h1>Company</h1>
