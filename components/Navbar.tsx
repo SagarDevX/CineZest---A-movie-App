@@ -6,6 +6,7 @@ import { useScroll } from "motion/react";
 import { useEffect, useState } from "react";
 import { IconMenu2, IconX } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
+import { supabase } from "@/app/lib/supabase";
 
 type Suggestion = {
   id: number;
@@ -13,11 +14,12 @@ type Suggestion = {
   poster_path: string | null;
 };
 
-
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [catOpen, SetcatOpen] = useState(false)
+  const [accOpen, SetAccOpen] = useState(false)
   const [query, setQuery] = useState('')
+  const [userSession, setUserSession] = useState<any>(null)
 
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -34,6 +36,19 @@ const Navbar = () => {
     { name: "Drama", href: "/category/drama" },
     { name: "Sci-fi", href: "/category/sci-fi" }
   ];
+
+  const account = [
+    { name: "Log in", href: "/login" },
+    { name: "Sign Up", href: "/signup" }]
+
+  useEffect(() => {
+    const fetchUserSession = async () => {
+      const { data } = await supabase.auth.getSession()
+      setUserSession(data.session)
+    }
+    fetchUserSession()
+  },
+    [])
 
 
   useEffect(() => {
@@ -109,14 +124,13 @@ const Navbar = () => {
                   ))}
                 </div>
               )}
-
             </div>
 
           </form>
         </div>
 
         <div className="hidden lg:flex flex-row gap-16 items-center">
-          <div className='flex flex-row gap-4 md:gap-6'>
+          <div className='flex flex-row gap-2'>
             <Link href="/" className='rounded-4xl hover:underline px-4 py-2 transition-all duration-300'>Home</Link>
             <div className="relative rounded-4xl  hover:underline px-4 py-2 transition-all duration-300 cursor-pointer"
               onMouseEnter={() => SetcatOpen(true)}
@@ -140,6 +154,47 @@ const Navbar = () => {
                 </div>
               )}
             </div>
+            <div className="relative rounded-4xl  hover:underline px-4 py-2 transition-all duration-300 cursor-pointer"
+              onMouseEnter={() => SetAccOpen(true)}
+              onMouseLeave={() => SetAccOpen(false)}>
+              <div>
+                {userSession
+                  ? "My Account"
+                  : "Log In"}
+              </div>
+              {accOpen && (
+                <div className="absolute top-full left-2 flex flex-col gap-2 justify-center px-3 py-2 rounded-xl text-neutral-400 text-xl bg-black backdrop-blur-md border border-white/20 shadow-lg">
+
+                  {userSession ? (
+                    <>
+                     <Link href="/profile">Profile</Link>
+                     <Link href="/watchlist">Watchlist</Link>
+
+                      <button
+                        onClick={async () => {
+                          await supabase.auth.signOut()
+                          setUserSession(null)
+                        }}
+                        className="text-left hover:text-neutral-200 cursor-pointer"
+                      >
+                        Logout
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <Link href="/login" className="hover:text-neutral-200">
+                        Log in
+                      </Link>
+
+                      <Link href="/signup" className="hover:text-neutral-200">
+                        SignUp
+                      </Link>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+
           </div>
         </div>
 

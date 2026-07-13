@@ -17,6 +17,9 @@ const PopulerMovie = () => {
   const [movie, setMovie] = useState<Movie[]>([])
   const [hoveredMovie, setHoveredMovie] = useState<string | null>(null)
 
+  const [isTrailerOpen, setisTrailerOpen] = useState(false)
+  const [trailerKey, settrailerKey] = useState("")
+
   const rowRef = useRef<HTMLDivElement>(null)
   const hoverTimeout = useRef<NodeJS.Timeout | null>(null)
   const BASE_URL = "https://movie-proxy-omega.vercel.app/api/movies"
@@ -29,7 +32,7 @@ const PopulerMovie = () => {
         if (!response.ok)
           throw new Error
         const result = await response.json()
-        setMovie(result.results.slice(0, 10))
+        setMovie(result.results.slice(0, 15))
       }
       catch (error) {
         console.error(error)
@@ -49,7 +52,7 @@ const PopulerMovie = () => {
   }
 
   return (
-    <div className="group">
+    <div className="group my-6">
       <div className="px-8 lg:px-16">
         <h1 className="text-2xl md:text-4xl tracking-tight font-semibold text-white">Popular Movies</h1>
       </div>
@@ -85,7 +88,7 @@ const PopulerMovie = () => {
               className="relative shrink-0"
             >
               <motion.div className=" w-28 md:w-35 lg:w-50 shrink-0 cursor-pointer">
-                <Card src={`https://image.tmdb.org/t/p/w500${item.poster_path}`} alt={item.title} height={2000} width={600} />
+                <Card src={`https://image.tmdb.org/t/p/w500${item.poster_path}`} alt={item.title} height={700} width={600} />
               </motion.div>
 
               <AnimatePresence>
@@ -143,10 +146,11 @@ const PopulerMovie = () => {
                               const res = await fetch(`${BASE_URL}?endpoint=movie/${item.id}/videos`)
                               const data = await res.json()
                               const trailer = data.results.find(
-                                (v: any) => v.type === "Trailer" && v.site === "YouTube"
+                                (v: any) => v.type === "Trailer" ||  v.type === "Teaser" && v.site === "YouTube"
                               )
                               if (trailer) {
-                                window.open(`https://www.youtube.com/watch?v=${trailer.key}`, "_self")
+                               setisTrailerOpen(true)
+                               settrailerKey(trailer.key)
                               } else {
                                 alert("Trailer not available!")
                               }
@@ -189,6 +193,45 @@ const PopulerMovie = () => {
         </div>
 
       </div>
+
+       <AnimatePresence>
+        {isTrailerOpen && (
+          <motion.div
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-999 flex items-center justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={()=>setisTrailerOpen(false)}
+          >
+            <motion.div
+              className="relative w-[90%] max-w-5xl aspect-video"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={(e) => e.stopPropagation()}>
+              <button
+                onClick={() => {
+                  setisTrailerOpen(false)
+                  settrailerKey("")
+                }}
+                className="absolute -top-12 right-0 text-white text-3xl font-bold cursor-pointer"
+              >
+                ✕
+              </button>
+
+              <iframe
+                className="w-full h-full rounded-xl"
+                src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1`}
+                title="YouTube Trailer"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </motion.div>
+
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

@@ -19,6 +19,9 @@ const TrendingPage = () => {
   const [allMovie, setAllMovie] = useState<Movie[]>([])
   const [hoveredMovie, setHoveredMovie] = useState<number | null>(null)
 
+  const [isTrailerOpen, setIsTrailerOpen] = useState(false)
+  const [trailerKey, setTrailerKey] = useState("")
+
   const rowRef = useRef<HTMLDivElement>(null)
   const hoverTimeout = useRef<NodeJS.Timeout | null>(null)
   const BASE_URL = "https://movie-proxy-omega.vercel.app/api/movies"
@@ -33,7 +36,7 @@ const TrendingPage = () => {
         }
         const result = await response.json()
 
-        setAllMovie(result.results.slice(0, 10))
+        setAllMovie(result.results.slice(0, 15))
       } catch (error) {
         console.error(error)
       }
@@ -52,10 +55,10 @@ const TrendingPage = () => {
   }
 
   return (
-    <div className="group">
+    <div className="group mt-6">
       <div className="px-8 lg:px-16">
         <h1 className="text-2xl md:text-4xl tracking-tight font-semibold text-white">
-          Animated Shows 
+          Animated Shows
         </h1>
       </div>
 
@@ -90,25 +93,25 @@ const TrendingPage = () => {
             <div
               key={item.id}
               className="relative shrink-0"
-              onMouseEnter={()=>{
-                hoverTimeout.current=setTimeout(
-                (() => setHoveredMovie(item.id)),500)}               
-                }
+              onMouseEnter={() => {
+                hoverTimeout.current = setTimeout(
+                  (() => setHoveredMovie(item.id)), 500)
+              }
+              }
               onMouseLeave={() => {
-                if(hoverTimeout.current)
-                {clearTimeout(hoverTimeout.current)}
-                setHoveredMovie(null) 
+                if (hoverTimeout.current) { clearTimeout(hoverTimeout.current) }
+                setHoveredMovie(null)
               }}
             >
 
               <motion.div
-                className="lg:h-80 w-28 md:w-35 lg:w-50 overflow-hidden cursor-pointer rounded-lg"
+                className=" lg:h-80 w-28 md:w-35 lg:w-50 overflow-hidden cursor-pointer rounded-lg"
               >
                 <Card
                   src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
                   alt={item.name}
                   width={600}
-                  height={2000}
+                  height={700}
                 />
               </motion.div>
 
@@ -164,19 +167,31 @@ const TrendingPage = () => {
                           <button
                             className="flex size-7 md:size-10 items-center justify-center rounded-full bg-white text-black cursor-pointer hover:scale-105 transition-all duration-300"
                             onClick={async () => {
-                              const res = await fetch(`${BASE_URL}?endpoint=movie/${item.id}/videos`)
-                              const data = await res.json()
-                              const trailer = data.results.find(
-                                (v: any) => v.type === "Trailer" && v.site === "YouTube"
-                              )
-                              if (trailer) {
-                                window.open(`https://www.youtube.com/watch?v=${trailer.key}`, "_self")
-                              } else {
-                                alert("Trailer not available!")
+                              try {
+                                const res = await fetch(
+                                  `${BASE_URL}?endpoint=tv/${item.id}/videos`
+                                )
+
+                                const data = await res.json()
+
+                                const trailer = data.results.find(
+                                  (video: any) =>
+                                    video.site === "YouTube" &&
+                                    (video.type === "Trailer" || video.type === "Teaser")
+                                )
+
+                                if (trailer) {
+                                  setTrailerKey(trailer.key)
+                                  setIsTrailerOpen(true)
+                                } else {
+                                  alert("Trailer not available!")
+                                }
+                              } catch (error) {
+                                console.error(error)
                               }
                             }}
                           >
-                            <IconPlayerPlayFilled className="w-4 h-4 md:w-5 md:h-5 lg:w-8 lg:h-8"/>
+                            <IconPlayerPlayFilled className="w-4 h-4 md:w-5 md:h-5 lg:w-8 lg:h-8" />
                           </button>
 
                           <button
@@ -210,7 +225,47 @@ const TrendingPage = () => {
           ))}
         </div>
       </div>
+      <AnimatePresence>
+        {isTrailerOpen && (
+          <motion.div
+            className="fixed inset-0 z-999 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => {
+              setIsTrailerOpen(false)
+              setTrailerKey("")
+            }}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-[95%] max-w-5xl aspect-video "
+            >
+              <button
+                onClick={() => {
+                  setIsTrailerOpen(false)
+                  setTrailerKey("")
+                }}
+                className="absolute -top-12 right-0 text-white text-3xl font-bold cursor-pointer"
+              >
+                ✕
+              </button>
 
+              <iframe
+                className="w-full h-full rounded-xl"
+                src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1`}
+                title="YouTube Trailer"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
