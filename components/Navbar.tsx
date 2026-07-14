@@ -125,7 +125,6 @@ const Navbar = () => {
                 </div>
               )}
             </div>
-
           </form>
         </div>
 
@@ -164,21 +163,11 @@ const Navbar = () => {
               </div>
               {accOpen && (
                 <div className="absolute top-full left-2 flex flex-col gap-2 justify-center px-3 py-2 rounded-xl text-neutral-400 text-xl bg-black backdrop-blur-md border border-white/20 shadow-lg">
-
                   {userSession ? (
                     <>
-                     <Link href="/profile">Profile</Link>
-                     <Link href="/watchlist">Watchlist</Link>
+                     <Link href="/UserProfile" className="text-left hover:text-neutral-200 cursor-pointer">Profile</Link>
+                     <Link href="/watchlist" className="text-left hover:text-neutral-200 cursor-pointer">Watchlist</Link>
 
-                      <button
-                        onClick={async () => {
-                          await supabase.auth.signOut()
-                          setUserSession(null)
-                        }}
-                        className="text-left hover:text-neutral-200 cursor-pointer"
-                      >
-                        Logout
-                      </button>
                     </>
                   ) : (
                     <>
