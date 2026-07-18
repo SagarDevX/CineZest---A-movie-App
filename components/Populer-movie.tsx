@@ -162,14 +162,10 @@ const PopulerMovie = () => {
                           <button
                             className=" flex size-7 md:size-10 items-center justify-center rounded-full border border-gray-500  hover:scale-105 transition-all duration-300 cursor-pointer"
                           >
-                            <IconThumbUp className="w-4 h-4 md:w-5 md:h-5 lg:w-8 lg:h-8" />
+                            <IconCirclePlus className="w-4 h-4 md:w-5 md:h-5 lg:w-8 lg:h-8" />
                           </button>
                         </div>
-
-                        <button
-                          className=" flex size-7 md:size-10 items-center justify-center rounded-full border border-gray-500  hover:scale-105 transition-all duration-300 cursor-pointer">
-                          <IconCirclePlus className="w-4 h-4 md:w-5 md:h-5 lg:w-8 lg:h-8" />
-                        </button>
+                       
                       </div>
                       <div className="flex flex-row justify-between items-center mt-2">
                         <h1 className="text-sm md:text-lg font-bold line-clamp-1">

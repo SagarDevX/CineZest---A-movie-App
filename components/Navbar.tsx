@@ -43,13 +43,21 @@ const Navbar = () => {
 
   useEffect(() => {
     const fetchUserSession = async () => {
-      const { data } = await supabase.auth.getSession()
-      setUserSession(data.session)
-    }
-    fetchUserSession()
-  },
-    [])
+      const { data } = await supabase.auth.getSession();
+      setUserSession(data.session);
+    };
+    fetchUserSession();
+    
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      setUserSession(session);
+    });
 
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     if (!query.trim()) {
@@ -87,7 +95,8 @@ const Navbar = () => {
             src="/logo.png"
             alt="Logo"
             width={100}
-            height={1000} />
+            height={1000} 
+            />
         </div>
 
         <div >
@@ -106,7 +115,7 @@ const Navbar = () => {
                 className='border border-white rounded-xl outline-none focus:ring-1 focus:ring-white focus:scale-102 p-1 
                transition-all duration-300 w-72 lg:w-120 text-base lg:text-2xl placeholder:text-neutral-400 active:text-white'
                 placeholder='Search' />
-              <button>Search</button>
+              <button className="cursor-pointer">Search</button>
 
               {showSuggestions && suggestions.length > 0 && (
                 <div className="absolute top-full -left-1 w-full bg-black/90 backdrop-blur-3xl border border-white/40 rounded-lg mt-2 z-50">
@@ -165,8 +174,8 @@ const Navbar = () => {
                 <div className="absolute top-full left-2 flex flex-col gap-2 justify-center px-3 py-2 rounded-xl text-neutral-400 text-xl bg-black backdrop-blur-md border border-white/20 shadow-lg">
                   {userSession ? (
                     <>
-                     <Link href="/UserProfile" className="text-left hover:text-neutral-200 cursor-pointer">Profile</Link>
-                     <Link href="/watchlist" className="text-left hover:text-neutral-200 cursor-pointer">Watchlist</Link>
+                      <Link href="/UserProfile" className="text-left hover:text-neutral-200 cursor-pointer">Profile</Link>
+                      <Link href="/watchlist" className="text-left hover:text-neutral-200 cursor-pointer">Watchlist</Link>
 
                     </>
                   ) : (

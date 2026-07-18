@@ -127,7 +127,7 @@ const page = () => {
             await supabase.auth.signOut()
             router.push("/")
           }}
-          className="text-neutral-800 mt-6 bg-neutral-100 hover:bg-neutral-300 transition-all  font-semibol rounded px-3 py-2 text-xl cursor-pointer"
+          className="text-neutral-800 mt-6 bg-neutral-100 hover:bg-neutral-300 transition-all rounded px-3 py-2 text-xl cursor-pointer"
         >
           Logout of CineZest
         </button>
