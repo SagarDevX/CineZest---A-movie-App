@@ -4,7 +4,8 @@ import { AnimatePresence, motion } from "motion/react"
 import React, { useEffect, useRef, useState } from 'react'
 import Card from './card'
 import Image from 'next/image'
-import { IconThumbUp, IconPlayerPlayFilled, IconCirclePlus, IconChevronDown, IconChevronLeft, IconChevronRight, } from '@tabler/icons-react';
+import { IconThumbUp, IconPlayerPlayFilled, IconCirclePlus, IconCheck, IconChevronLeft, IconChevronRight, } from '@tabler/icons-react';
+import { supabase } from "@/app/lib/supabase"
 
 type Movie = {
   id: number
@@ -16,6 +17,8 @@ type Movie = {
 }
 
 const TrendingPage = () => {
+  const [watchlist, setWatchlist] = useState<number[]>([])
+
   const [allMovie, setAllMovie] = useState<Movie[]>([])
   const [hoveredMovie, setHoveredMovie] = useState<number | null>(null)
 
@@ -42,6 +45,57 @@ const TrendingPage = () => {
       }
     }
     DataFetch()
+  }, [])
+
+  const handleWatchlist = async (item: Movie) => {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      alert("Please Login First")
+      return
+    }
+
+    if (watchlist.includes(item.id)) return
+
+    const { error } = await supabase.from("watchlist").insert({
+      user_id: user.id,
+      movie_id: item.id,
+      movie_title: item.name,
+      poster_path: item.poster_path,
+    })
+
+
+    if (error) {
+      console.error(error)
+      alert("Failed to add movie")
+    } else {
+      setWatchlist((prev) => [...prev, item.id])
+    }
+  }
+
+  useEffect(() => {
+    const fetchWatchlist = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+
+      if (!user) return
+
+      const { data, error } = await supabase
+        .from("watchlist")
+        .select("movie_id")
+        .eq("user_id", user.id)
+
+      if (error) {
+        console.error("Error fetching watchlist:", error)
+        return
+      }
+
+      if (data) {
+        setWatchlist(data.map((movie) => movie.movie_id))
+      }
+    }
+
+    fetchWatchlist()
   }, [])
 
   const scroll = (direction: "left" | "right") => {
@@ -89,137 +143,164 @@ const TrendingPage = () => {
           ref={rowRef}
           className="flex flex-row gap-1 md:gap-2 overflow-x-scroll no-scrollbar overflow-y-visible scrollbar-hide scroll-smooth pt-6 pb-2 md:py-7 lg:py-8 px-8 lg:px-16"
         >
-          {allMovie.map((item, idx) => (
-            <div
-              key={item.id}
-              className="relative shrink-0"
-              onMouseEnter={() => {
-                hoverTimeout.current = setTimeout(
-                  (() => setHoveredMovie(item.id)), 500)
-              }
-              }
-              onMouseLeave={() => {
-                if (hoverTimeout.current) { clearTimeout(hoverTimeout.current) }
-                setHoveredMovie(null)
-              }}
-            >
-
-              <motion.div
-                className=" lg:h-80 w-28 md:w-35 lg:w-50 overflow-hidden cursor-pointer rounded-lg"
+          {allMovie.map((item, idx) => {
+            const isSaved = watchlist.includes(item.id)
+            return (
+              <div
+                key={item.id}
+                className="relative shrink-0"
+                onMouseEnter={() => {
+                  hoverTimeout.current = setTimeout(
+                    (() => setHoveredMovie(item.id)), 500)
+                }
+                }
+                onMouseLeave={() => {
+                  if (hoverTimeout.current) { clearTimeout(hoverTimeout.current) }
+                  setHoveredMovie(null)
+                }}
               >
-                <Card
-                  src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
-                  alt={item.name}
-                  width={600}
-                  height={700}
-                />
-              </motion.div>
 
-              <AnimatePresence>
-                {hoveredMovie === item.id && (
-                  <motion.div
-                    initial={{
-                      opacity: 0,
-                      scale: 0.96,
-                    }}
-                    animate={{
-                      opacity: 1,
-                      y: -24,
-                      scale: 1,
-                    }}
-                    exit={{
-                      opacity: 0,
-                      scale: 0.96,
-                    }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 300,
-                      damping: 35,
-                    }}
-                    className={`absolute top-0 z-50 w-48 md:w-[320px] overflow-hidden rounded-2xl bg-[#181818] shadow-2xl cursor-pointer
+                <motion.div
+                  className=" lg:h-80 w-28 md:w-35 lg:w-50 overflow-hidden cursor-pointer rounded-lg"
+                >
+                  <Card
+                    src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
+                    alt={item.name}
+                    width={600}
+                    height={700}
+                  />
+                </motion.div>
+
+                <AnimatePresence>
+                  {hoveredMovie === item.id && (
+                    <motion.div
+                      initial={{
+                        opacity: 0,
+                        scale: 0.96,
+                      }}
+                      animate={{
+                        opacity: 1,
+                        y: -24,
+                        scale: 1,
+                      }}
+                      exit={{
+                        opacity: 0,
+                        scale: 0.96,
+                      }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 300,
+                        damping: 35,
+                      }}
+                      className={`absolute top-0 z-50 w-48 md:w-[320px] overflow-hidden rounded-2xl bg-[#181818] shadow-2xl cursor-pointer
                     
                     ${idx === 0
-                        ? "-right-30"
-                        : idx === allMovie.length - 1
-                          ? "-left-30"
-                          : "left-1/2 -translate-x-1/2"
-                      }
+                          ? "-right-30"
+                          : idx === allMovie.length - 1
+                            ? "-left-30"
+                            : "left-1/2 -translate-x-1/2"
+                        }
                     `}
-                  >
+                    >
 
-                    <div className="relative h-28 md:h-32 lg:h-48 w-full">
-                      <Image
-                        src={`https://image.tmdb.org/t/p/original${item.backdrop_path}`}
-                        alt={item.name}
-                        fill
-                        className="object-cover"
-                      />
+                      <div className="relative h-28 md:h-32 lg:h-48 w-full">
+                        <Image
+                          src={`https://image.tmdb.org/t/p/original${item.backdrop_path}`}
+                          alt={item.name}
+                          fill
+                          className="object-cover"
+                        />
 
-                      <div className="absolute inset-0 bg-linear-to-t from-[#181818] to-transparent" />
-                    </div>
-
-                    <div className="px-4 py-2 md:p-4 ">
-
-                      <div className="flex items-center justify-between md:mt-2">
-
-                        <div className="flex gap-1 md:gap-3">
-
-                          <button
-                            className="flex size-7 md:size-10 items-center justify-center rounded-full bg-white text-black cursor-pointer hover:scale-105 transition-all duration-300"
-                            onClick={async () => {
-                              try {
-                                const res = await fetch(
-                                  `${BASE_URL}?endpoint=tv/${item.id}/videos`
-                                )
-
-                                const data = await res.json()
-
-                                const trailer = data.results.find(
-                                  (video: any) =>
-                                    video.site === "YouTube" &&
-                                    (video.type === "Trailer" || video.type === "Teaser")
-                                )
-
-                                if (trailer) {
-                                  setTrailerKey(trailer.key)
-                                  setIsTrailerOpen(true)
-                                } else {
-                                  alert("Trailer not available!")
-                                }
-                              } catch (error) {
-                                console.error(error)
-                              }
-                            }}
-                          >
-                            <IconPlayerPlayFilled className="w-4 h-4 md:w-5 md:h-5 lg:w-8 lg:h-8" />
-                          </button>
-
-                          <button
-                            className=" flex size-7 md:size-10 items-center justify-center rounded-full border border-gray-500  hover:scale-105 transition-all duration-300 cursor-pointer"
-                          >
-                            <IconCirclePlus className="w-4 h-4 md:w-5 md:h-5 lg:w-8 lg:h-8" />
-                          </button>
-                        </div>
-
-                        
+                        <div className="absolute inset-0 bg-linear-to-t from-[#181818] to-transparent" />
                       </div>
-                      <div className="flex flex-row justify-between items-center mt-2">
-                        <h1 className="text-sm md:text-lg font-bold line-clamp-1">
-                          {item.name}
-                        </h1>
-                        <p className=" text-green-400 text-sm md:text-lg">
-                          ⭐{Number(item.vote_average).toFixed(1)}
+
+                      <div className="px-4 py-2 md:p-4 ">
+
+                        <div className="flex items-center justify-between md:mt-2">
+
+                          <div className="flex gap-1 md:gap-3">
+
+                            <button
+                              className="flex size-7 md:size-10 items-center justify-center rounded-full bg-white text-black cursor-pointer hover:scale-105 transition-all duration-300"
+                              onClick={async () => {
+                                try {
+                                  const res = await fetch(
+                                    `${BASE_URL}?endpoint=tv/${item.id}/videos`
+                                  )
+
+                                  const data = await res.json()
+
+                                  const trailer = data.results.find(
+                                    (video: any) =>
+                                      video.site === "YouTube" &&
+                                      (video.type === "Trailer" || video.type === "Teaser")
+                                  )
+
+                                  if (trailer) {
+                                    setTrailerKey(trailer.key)
+                                    setIsTrailerOpen(true)
+                                  } else {
+                                    alert("Trailer not available!")
+                                  }
+                                } catch (error) {
+                                  console.error(error)
+                                }
+                              }}
+                            >
+                              <IconPlayerPlayFilled className="w-4 h-4 md:w-5 md:h-5 lg:w-8 lg:h-8" />
+                            </button>
+
+                            <motion.button
+                              whileTap={{ scale: 0.85 }}
+                              onClick={() => handleWatchlist(item)}
+                              className="flex size-7 md:size-10 items-center justify-center rounded-full border border-gray-500 hover:scale-105 transition-all duration-300 cursor-pointer"
+                            >
+                              <AnimatePresence mode="wait">
+                                {isSaved ? (
+                                  <motion.div
+                                    key="check"
+                                    initial={{ opacity: 0, rotateY: 90 }}
+                                    animate={{ opacity: 1, rotateY: 0 }}
+                                    exit={{ opacity: 0, rotateY: -90 }}
+                                    transition={{ duration: 0.25, ease: "easeInOut" }}
+                                  >
+                                    <IconCheck className="w-3 h-3 md:w-4 md:h-4 lg:w-7 lg:h-7 text-green-500" />
+                                  </motion.div>
+                                ) : (
+                                  <motion.div
+                                    key="plus"
+                                    initial={{ opacity: 0, rotateY: 90 }}
+                                    animate={{ opacity: 1, rotateY: 0 }}
+                                    exit={{ opacity: 0, rotateY: -90 }}
+                                    transition={{ duration: 0.25, ease: "easeInOut" }}
+                                  >
+                                    <IconCirclePlus className="w-4 h-4 md:w-5 md:h-5 lg:w-8 lg:h-8" />
+                                  </motion.div>
+                                )}
+                              </AnimatePresence>
+                            </motion.button>
+                          </div>
+
+
+                        </div>
+                        <div className="flex flex-row justify-between items-center mt-2">
+                          <h1 className="text-sm md:text-lg font-bold line-clamp-1">
+                            {item.name}
+                          </h1>
+                          <p className=" text-green-400 text-sm md:text-lg">
+                            ⭐{Number(item.vote_average).toFixed(1)}
+                          </p>
+                        </div>
+                        <p className="line-clamp-1 lg:line-clamp-3 text-xs text-gray-400">
+                          {item.overview}
                         </p>
                       </div>
-                      <p className="line-clamp-1 lg:line-clamp-3 text-xs text-gray-400">
-                        {item.overview}
-                      </p>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>)
+
+          })}
         </div>
       </div>
       <AnimatePresence>
@@ -263,7 +344,7 @@ const TrendingPage = () => {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </div >
   )
 }
 

@@ -22,7 +22,6 @@ export default function WatchlistPage() {
 
   const getWatchlist = async () => {
     try {
-      // Get logged-in user
       const {
         data: { user },
       } = await supabase.auth.getUser()
@@ -32,7 +31,6 @@ export default function WatchlistPage() {
         return
       }
 
-      // Fetch only this user's watchlist
       const { data, error } = await supabase
         .from("watchlist")
         .select("*")
@@ -63,8 +61,6 @@ export default function WatchlistPage() {
         console.error(error)
         return
       }
-
-      // Update UI without refreshing
       setMovies((prev) =>
         prev.filter((movie) => movie.movie_id !== movieId)
       )
@@ -113,7 +109,7 @@ export default function WatchlistPage() {
                 onClick={() =>
                   removeFromWatchlist(movie.movie_id)
                 }
-                className="mt-3 w-full rounded-md bg-red-600 py-2 text-sm font-medium hover:bg-red-700"
+                className="mt-3 w-full rounded-md bg-red-600 py-2 text-sm font-medium hover:bg-red-700 cursor-pointer"
               >
                 Remove
               </button>

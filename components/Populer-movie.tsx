@@ -3,7 +3,8 @@ import { AnimatePresence, motion } from "motion/react"
 import { useEffect, useRef, useState } from "react"
 import Card from "./card"
 import Image from "next/image"
-import { IconChevronLeft, IconChevronRight, IconChevronDown, IconPlayerPlayFilled, IconCirclePlus, IconThumbUp } from "@tabler/icons-react"
+import { IconChevronLeft, IconChevronRight, IconCheck, IconPlayerPlayFilled, IconCirclePlus, IconThumbUp } from "@tabler/icons-react"
+import { supabase } from "@/app/lib/supabase"
 
 type Movie = {
   id: string,
@@ -14,6 +15,8 @@ type Movie = {
   vote_average: number,
 }
 const PopulerMovie = () => {
+  const [watchlist, setWatchlist] = useState<string[]>([])
+
   const [movie, setMovie] = useState<Movie[]>([])
   const [hoveredMovie, setHoveredMovie] = useState<string | null>(null)
 
@@ -23,6 +26,33 @@ const PopulerMovie = () => {
   const rowRef = useRef<HTMLDivElement>(null)
   const hoverTimeout = useRef<NodeJS.Timeout | null>(null)
   const BASE_URL = "https://movie-proxy-omega.vercel.app/api/movies"
+
+  const addTowatchlist = async (item: Movie) => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+
+    if (!user) {
+      alert("Please Login first")
+      return
+    }
+
+    if (watchlist.includes(item.id)) return
+
+    const { error } = await supabase.from("watchlist").insert({
+      user_id: user.id,
+      movie_id: item.id,
+      movie_title: item.title,
+      poster_path: item.poster_path,
+    })
+
+    if (error) {
+      console.error(error)
+      alert("Failed to add movie")
+    } else {
+      setWatchlist((prev) => [...prev, item.id])
+    }
+  }
 
   useEffect(() => {
     const DataFetch = async () => {
@@ -60,19 +90,20 @@ const PopulerMovie = () => {
       <div className="relative">
         <button className="absolute left-0 top-5 z-100 h-42 md:h-54 lg:h-75  md:w-16 rounded-l-lg opacity-0 transition group-hover:opacity-100"
           onClick={() => { scroll("left") }}>
-          <IconChevronLeft size={40} className="mx-auto text-white"/>
+          <IconChevronLeft size={40} className="mx-auto text-white" />
         </button>
         <button className="cursor-pointer absolute right-0 top-5 z-100 h-42 md:h-54 lg:h-75 md:w-16 opacity-0 transition group-hover:opacity-100"
           onClick={() => { scroll("right") }}>
-          <IconChevronRight size={40} className="mx-auto text-white"/>
+          <IconChevronRight size={40} className="mx-auto text-white" />
         </button>
 
         <div
           ref={rowRef}
           className="flex flex-row gap-1 md:gap-2 overflow-x-scroll no-scrollbar overflow-y-visible scrollbar-hide scroll-smooth pt-6 pb-2 md:py-7 lg:py-8 px-8 lg:px-16">
 
-          {movie.map((item, idx) => (
-            <div
+          {movie.map((item, idx) => {
+            const isSaved = watchlist.includes(item.id)
+            return <div
               key={item.id}
               onMouseEnter={() => {
                 hoverTimeout.current = setTimeout(() => {
@@ -146,26 +177,50 @@ const PopulerMovie = () => {
                               const res = await fetch(`${BASE_URL}?endpoint=movie/${item.id}/videos`)
                               const data = await res.json()
                               const trailer = data.results.find(
-                                (v: any) => v.type === "Trailer" ||  v.type === "Teaser" && v.site === "YouTube"
+                                (v: any) => v.type === "Trailer" || v.type === "Teaser" && v.site === "YouTube"
                               )
                               if (trailer) {
-                               setisTrailerOpen(true)
-                               settrailerKey(trailer.key)
+                                setisTrailerOpen(true)
+                                settrailerKey(trailer.key)
                               } else {
                                 alert("Trailer not available!")
                               }
                             }}
                           >
-                            <IconPlayerPlayFilled className="w-4 h-4 md:w-5 md:h-5 lg:w-8 lg:h-8"/>
+                            <IconPlayerPlayFilled className="w-4 h-4 md:w-5 md:h-5 lg:w-8 lg:h-8" />
                           </button>
 
-                          <button
-                            className=" flex size-7 md:size-10 items-center justify-center rounded-full border border-gray-500  hover:scale-105 transition-all duration-300 cursor-pointer"
+                          <motion.button
+                            whileTap={{ scale: 0.85 }}
+                            onClick={() => addTowatchlist(item)}
+                            className="flex size-7 md:size-10 items-center justify-center rounded-full border border-gray-500 hover:scale-105 transition-all duration-300 cursor-pointer"
                           >
-                            <IconCirclePlus className="w-4 h-4 md:w-5 md:h-5 lg:w-8 lg:h-8" />
-                          </button>
+                            <AnimatePresence mode="wait">
+                              {isSaved ? (
+                                <motion.div
+                                  key="check"
+                                  initial={{ opacity: 0, rotateY: 90 }}
+                                  animate={{ opacity: 1, rotateY: 0 }}
+                                  exit={{ opacity: 0, rotateY: -90 }}
+                                  transition={{ duration: 0.25, ease: "easeInOut" }}
+                                >
+                                  <IconCheck className="w-3 h-3 md:w-4 md:h-4 lg:w-7 lg:h-7 text-green-500" />
+                                </motion.div>
+                              ) : (
+                                <motion.div
+                                  key="plus"
+                                  initial={{ opacity: 0, rotateY: 90 }}
+                                  animate={{ opacity: 1, rotateY: 0 }}
+                                  exit={{ opacity: 0, rotateY: -90 }}
+                                  transition={{ duration: 0.25, ease: "easeInOut" }}
+                                >
+                                  <IconCirclePlus className="w-4 h-4 md:w-5 md:h-5 lg:w-8 lg:h-8" />
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </motion.button>
                         </div>
-                       
+
                       </div>
                       <div className="flex flex-row justify-between items-center mt-2">
                         <h1 className="text-sm md:text-lg font-bold line-clamp-1">
@@ -185,19 +240,19 @@ const PopulerMovie = () => {
 
 
             </div>
-          ))}
+          })}
         </div>
 
       </div>
 
-       <AnimatePresence>
+      <AnimatePresence>
         {isTrailerOpen && (
           <motion.div
             className="fixed inset-0 bg-black/80 backdrop-blur-sm z-999 flex items-center justify-center"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={()=>setisTrailerOpen(false)}
+            onClick={() => setisTrailerOpen(false)}
           >
             <motion.div
               className="relative w-[90%] max-w-5xl aspect-video"

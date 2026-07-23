@@ -106,7 +106,7 @@ const PopulerMovie = () => {
       </div>
 
       <div className="relative">
-        <button className="absolute left-0 top-5 z-100 h-42 md:h-54 lg:h-75  md:w-16 rounded-l-lg opacity-0 transition group-hover:opacity-100"
+        <button className="absolute left-0 top-5 z-100 h-42 md:h-54 lg:h-75  md:w-16 rounded-l-lg opacity-0 transition group-hover:opacity-100 cursor-pointer"
           onClick={() => { scroll("left") }}>
           <IconChevronLeft size={40} className="mx-auto text-white" />
         </button>
@@ -208,41 +208,35 @@ const PopulerMovie = () => {
                             <IconPlayerPlayFilled className="w-4 h-4 md:w-5 md:h-5 lg:w-8 lg:h-8" />
                           </button>
 
-                          <button
-                            className=" flex size-7 md:size-10 items-center justify-center rounded-full border border-gray-500  hover:scale-105 transition-all duration-300 cursor-pointer"
+                          <motion.button
+                            whileTap={{ scale: 0.85 }}
+                            onClick={() => addTowatchlist(item)}
+                            className="flex size-7 md:size-10 items-center justify-center rounded-full border border-gray-500 hover:scale-105 transition-all duration-300 cursor-pointer"
                           >
-                            <motion.button
-                              whileTap={{ scale: 0.85 }}
-                              onClick={() => addTowatchlist(item)}
-                              className="flex size-7 md:size-10 items-center justify-center rounded-full border border-gray-500 hover:scale-105 transition-all duration-300 cursor-pointer"
-                            >
-                              <AnimatePresence mode="wait">
-                                {isSaved ? (
-                                  <motion.div
-                                    key="check"
-                                    initial={{ opacity: 0, rotateY: 0 }}
-                                    animate={{  opacity: 1, rotateY: 0 }}
-                                    exit={{ opacity: 0, rotateY: -90}}
-                                    transition={{ duration: 0.25,ease:"easeInOut" }}
-                                    style={{transformStyle:"preserve-3d"}}
-                                  >
-                                    <IconCheck className="w-3 h-3 md:w-4 md:h-4 lg:w-7 lg:h-7 text-green-500" />
-                                  </motion.div>
-                                ) : (
-                                  <motion.div
-                                    key="plus"
-                                    initial={{  opacity: 0, rotateY: 0 }}
-                                    animate={{  opacity: 1, rotateY: 0 }}
-                                    exit={{  opacity: 0, rotateY: -90 }}
-                                    transition={{ duration: 0.25 , ease:"easeInOut" }}
-                                    style={{transformStyle:"preserve-3d"}}
-                                  >
-                                    <IconCirclePlus className="w-4 h-4 md:w-5 md:h-5 lg:w-8 lg:h-8" />
-                                  </motion.div>
-                                )}
-                              </AnimatePresence>
-                            </motion.button>
-                          </button>
+                            <AnimatePresence mode="wait">
+                              {isSaved ? (
+                                <motion.div
+                                  key="check"
+                                  initial={{ opacity: 0, rotateY: 90 }}
+                                  animate={{ opacity: 1, rotateY: 0 }}
+                                  exit={{ opacity: 0, rotateY: -90 }}
+                                  transition={{ duration: 0.25, ease: "easeInOut" }}
+                                >
+                                  <IconCheck className="w-3 h-3 md:w-4 md:h-4 lg:w-7 lg:h-7 text-green-500" />
+                                </motion.div>
+                              ) : (
+                                <motion.div
+                                  key="plus"
+                                  initial={{ opacity: 0, rotateY: 90 }}
+                                  animate={{ opacity: 1, rotateY: 0 }}
+                                  exit={{ opacity: 0, rotateY: -90 }}
+                                  transition={{ duration: 0.25, ease: "easeInOut" }}
+                                >
+                                  <IconCirclePlus className="w-4 h-4 md:w-5 md:h-5 lg:w-8 lg:h-8" />
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </motion.button>
                         </div>
 
                       </div>
