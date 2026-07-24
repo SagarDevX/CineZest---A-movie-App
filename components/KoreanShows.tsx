@@ -55,6 +55,24 @@ const PopulerMovie = () => {
   }
 
   useEffect(() => {
+    const fetchWatchlist = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      if (!user) return
+      const { data } = await supabase
+        .from("watchlist")
+        .select("movie_id")
+        .eq("user_id", user.id)
+
+      if (data) {
+        setWatchlist(data.map((movie) => movie.movie_id))
+      }
+    }
+    fetchWatchlist()
+  }, [])
+
+  useEffect(() => {
     const DataFetch = async () => {
       try {
         const url = "https://movie-proxy-omega.vercel.app/api/movies?endpoint=discover/tv&with_original_language=ko&sort_by=popularity.desc"

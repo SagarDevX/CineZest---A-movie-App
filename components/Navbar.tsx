@@ -32,7 +32,7 @@ const Navbar = () => {
     { name: "Action", href: "/category/action" },
     { name: "Animation", href: "/category/animation" },
     { name: "Crime", href: "/category/crime" },
-    { name: "Documentary", href: "/category/documentry" },
+    { name: "Reality", href: "/category/reality" },
     { name: "Drama", href: "/category/drama" },
     { name: "Sci-fi", href: "/category/sci-fi" }
   ];

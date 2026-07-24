@@ -18,7 +18,7 @@ type Movie = {
 
 const BASE_URL = "https://movie-proxy-omega.vercel.app/api/movies"
 
-const Drama = () => {
+const Reality = () => {
   const [movieKey, setMovieKey] = useState("")
   const [isTrailerOpen, setisTrailerOpen] = useState(false)
 
@@ -77,14 +77,12 @@ const Drama = () => {
     const DataFetch = async () => {
       try {
         setLoading(true)
-        const [page1, page2] = await Promise.all([
-          fetch(`${BASE_URL}?endpoint=discover/tv&with_genres=18&sort_by=popularity.desc&page=1`).then(r => r.json()),
-          fetch(`${BASE_URL}?endpoint=discover/tv&with_genres=18&sort_by=popularity.desc&page=2`).then(r => r.json()),
+        const [page1] = await Promise.all([
+          fetch(`${BASE_URL}?endpoint=discover/tv&with_genres=10764&sort_by=popularity.desc&page=2`).then(r => r.json()),
         ])
 
-        const allMovies = [
+        const allMovies = [          
           ...page1.results,
-          ...page2.results,
         ]
 
         setAllMovie(allMovies)
@@ -107,9 +105,9 @@ const Drama = () => {
     <div className="h-full max-w-8xl mx-auto mt-24  text-white flex-wrap items-center justify-center px-4 md:px-12">
       <div className="px-16 py-2 mb-6 ">
         <h1 className="text-3xl  font-semibold">
-          Drama Shows
+          Reality Shows
         </h1>
-        <p>Drama shows filled with powerful emotions,compelling characters and unforgettable stories that stay with you.</p>
+        <p>Reality shows full of unscripted drama, real emotions, unexpected moments and unforgettable personalities.</p>
       </div>
 
       <div className="max-w-fit flex flex-wrap justify-center items-center gap-2">
@@ -298,4 +296,4 @@ const Drama = () => {
   )
 }
 
-export default Drama
+export default Reality

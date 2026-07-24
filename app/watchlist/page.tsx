@@ -101,7 +101,7 @@ export default function WatchlistPage() {
                 />
               </div>
 
-              <h2 className="mt-2 text-sm md:text-base font-medium line-clamp-2">
+              <h2 className="mt-2 text-sm md:text-base font-medium line-clamp-1">
                 {movie.movie_title}
               </h2>
 

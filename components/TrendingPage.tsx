@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "motion/react"
 import { useEffect, useRef, useState } from "react"
 import Card from "./card"
 import Image from "next/image"
-import { IconChevronLeft, IconChevronRight, IconChevronDown, IconPlayerPlayFilled, IconCirclePlus, IconCheck } from "@tabler/icons-react"
+import { IconChevronLeft, IconChevronRight, IconPlayerPlayFilled, IconCirclePlus, IconCheck } from "@tabler/icons-react"
 import { supabase } from "@/app/lib/supabase"
 
 type Movie = {
