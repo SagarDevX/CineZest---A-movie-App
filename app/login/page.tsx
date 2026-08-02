@@ -1,6 +1,8 @@
 'use client'
 import { supabase } from '../lib/supabase'
 import { useState } from 'react'
+import { IconBrandGoogle, IconBrandGithub } from '@tabler/icons-react'
+import { useRouter } from 'next/navigation'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -8,6 +10,8 @@ export default function LoginPage() {
   const [isSignUp, setIsSignUp] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+
+  const router = useRouter()
 
   const handleEmailAuth = async () => {
     setLoading(true)
@@ -20,7 +24,7 @@ export default function LoginPage() {
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password })
         if (error) throw error
-        window.location.href = '/'
+        router.push("/")
       }
     } catch (err: any) {
       setError(err.message)
@@ -31,6 +35,15 @@ export default function LoginPage() {
   const handleGoogleLogin = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/`
+      }
+    })
+    if (error) setError(error.message)
+  }
+  const handleGithubLogin = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'github',
       options: {
         redirectTo: `${window.location.origin}/`
       }
@@ -77,13 +90,24 @@ export default function LoginPage() {
           <div className="flex-1 h-px bg-gray-600" />
         </div>
 
-        <button
-          onClick={handleGoogleLogin}
-          className="w-full bg-white text-black py-3 rounded-lg font-semibold hover:bg-gray-200 cursor-pointer flex items-center justify-center gap-2"
-        >
-          <img src="https://www.google.com/favicon.ico" width={20} height={20} />
-          Continue with Google
-        </button>
+        <div className='flex flex-col gap-2'>
+          <button
+            onClick={handleGoogleLogin}
+            className="w-full bg-white text-black py-3 rounded-lg font-semibold hover:bg-gray-200 cursor-pointer flex items-center justify-center gap-2"
+          >
+            <IconBrandGoogle size={20} className="text-[#4285F4]"/>
+            Continue with Google
+          </button>
+
+          <button
+            onClick={handleGithubLogin}
+            className="w-full bg-white text-black py-3 rounded-lg font-semibold hover:bg-gray-200 cursor-pointer flex items-center justify-center gap-2"
+          >
+            <IconBrandGithub size={20} />
+            Continue with GitHub
+          </button>
+        </div>
+
 
         <p className="text-gray-400 text-center mt-4">
           {isSignUp ? 'Already have an account?' : "Don't have an account?"}
