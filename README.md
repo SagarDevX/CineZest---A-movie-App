@@ -46,7 +46,7 @@ A full-stack movie streaming app built with Next.js, Supabase, and TMDB API. Bro
 
 1. **Clone the repo**
 ```bash
-git clone https://github.com/yourusername/movie-app.git
+git clone https://github.com/SagarDevX/cinezest.git
 cd movie-app
 ```
 
