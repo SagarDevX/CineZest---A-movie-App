@@ -222,30 +222,14 @@ const Navbar = () => {
               px-4 py-2 rounded-xl transition-all duration-300'>
               Home
             </Link>
-            <div
-              onMouseEnter={() => SetcatOpen(true)}
-              onMouseLeave={() => SetcatOpen(false)}
+            <Link
+            href="/Categories"
+            onClick={()=>setIsOpen(false)}
               className='text-white text-lg hover:bg-neutral-700 
               px-4 py-2 rounded-xl transition-all duration-300'>
               <h1>Categories</h1>
-              {catOpen && (
-                <div
-                  className="absolute top-full left-0 flex flex-col gap-2 justify-center px-3 py-2 rounded-xl text-neutral-400 text-xl bg-black backdrop-blur-md border border-white/20 shadow-lg">
-                  {items.map((item, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.1 }}
-                    >
-                      <Link href={item.href} className="hover:text-neutral-200">
-                        {item.name}
-                      </Link>
-                    </motion.div>
-                  ))}
-                </div>
-              )}
-            </div>
+              
+            </Link>
 
           </motion.div>
         )}
