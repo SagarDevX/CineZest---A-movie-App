@@ -127,10 +127,10 @@ const Page = () => {
               </p>
             </div>
           )}
-          <div className="flex flex-row gap-4 my-2 w-56 sm:w-100 ml-10 lg:ml-0">
+          <div className="flex flex-row gap-4 my-2 w-28 lg:w-100 ml-10 lg:ml-0">
             <button
               onClick={handlePlay}
-              className="bg-white text-black font-bold px-2 py-1 text-2xl lg:text-3xl rounded-xl w-28 lg:w-40 cursor-pointer hover:scale-105 transition-all duration-400"
+              className="bg-white text-black font-bold px-2 py-1 text-xl md:text-3xl rounded-xl w-20 lg:w-40 cursor-pointer hover:scale-105 transition-all duration-400"
             >
               Play
             </button>

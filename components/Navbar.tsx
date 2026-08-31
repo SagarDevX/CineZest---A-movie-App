@@ -47,7 +47,7 @@ const Navbar = () => {
       setUserSession(data.session);
     };
     fetchUserSession();
-    
+
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
@@ -88,15 +88,15 @@ const Navbar = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.2 }}
         style={{ backdropFilter: useMotionTemplate`blur(${blur}px)` }}
-        className="fixed top-0 left-0 w-full h-20 flex justify-between 
-        items-center px-4 md:px-16 text-2xl z-200 bg-transparent backdrop-blur-sm">
+        className="fixed top-0 left-0 w-full h-20 flex justify-between gap-6 md:gap-0
+        items-center px-8 px-4 md:px-16 text-2xl z-200 bg-transparent backdrop-blur-sm">
         <div>
           <Image
             src="/logo.png"
             alt="Logo"
             width={100}
-            height={1000} 
-            />
+            height={1000}
+          />
         </div>
 
         <div >
@@ -105,7 +105,7 @@ const Navbar = () => {
             if (!query.trim()) return;
             router.push(`/search?query=${encodeURIComponent(query)}`);
           }}>
-            <div className="relative w-72 lg:w-120 flex flex-row gap-2">
+            <div className="relative w-40 sm:w-64 lg:w-120 flex flex-row gap-2">
               <input
                 type="text"
                 value={query}
@@ -113,9 +113,9 @@ const Navbar = () => {
                 onFocus={() => setShowSuggestions(true)}
                 onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
                 className='border border-white rounded-xl outline-none focus:ring-1 focus:ring-white focus:scale-102 p-1 
-               transition-all duration-300 w-72 lg:w-120 text-base lg:text-2xl placeholder:text-neutral-400 active:text-white'
+               transition-all duration-300 w-full lg:w-120 text-base lg:text-2xl placeholder:text-neutral-400 active:text-white'
                 placeholder='Search' />
-              <button className="cursor-pointer">Search</button>
+              <button className="cursor-pointer text-base md:text-2xl">Search</button>
 
               {showSuggestions && suggestions.length > 0 && (
                 <div className="absolute top-full -left-1 w-full bg-black/90 backdrop-blur-3xl border border-white/40 rounded-lg mt-2 z-50">
@@ -138,7 +138,7 @@ const Navbar = () => {
         </div>
 
         <div className="hidden lg:flex flex-row gap-16 items-center">
-          <div className='flex flex-row gap-2'>
+          <div className='flex flex-row gap-2 items-center'>
             <Link href="/" className='rounded-4xl hover:underline px-4 py-2 transition-all duration-300'>Home</Link>
             <div className="relative rounded-4xl  hover:underline px-4 py-2 transition-all duration-300 cursor-pointer"
               onMouseEnter={() => SetcatOpen(true)}
@@ -181,7 +181,7 @@ const Navbar = () => {
                   ) : (
                     <>
                       <Link href="/login" className="hover:text-neutral-200">
-                        Log in
+                        Log-in
                       </Link>
 
                       <Link href="/signup" className="hover:text-neutral-200">
@@ -222,13 +222,30 @@ const Navbar = () => {
               px-4 py-2 rounded-xl transition-all duration-300'>
               Home
             </Link>
-            <Link
-              href="/categories"
-              onClick={() => setIsOpen(false)}
+            <div
+              onMouseEnter={() => SetcatOpen(true)}
+              onMouseLeave={() => SetcatOpen(false)}
               className='text-white text-lg hover:bg-neutral-700 
               px-4 py-2 rounded-xl transition-all duration-300'>
-              Categories
-            </Link>
+              <h1>Categories</h1>
+              {catOpen && (
+                <div
+                  className="absolute top-full left-0 flex flex-col gap-2 justify-center px-3 py-2 rounded-xl text-neutral-400 text-xl bg-black backdrop-blur-md border border-white/20 shadow-lg">
+                  {items.map((item, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.1 }}
+                    >
+                      <Link href={item.href} className="hover:text-neutral-200">
+                        {item.name}
+                      </Link>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+            </div>
 
           </motion.div>
         )}
